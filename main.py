@@ -15,8 +15,8 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
 # Screen information
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 800
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 1000
 
 DISPLAYSURF = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 DISPLAYSURF.fill(BLACK)
@@ -43,7 +43,7 @@ class Snake(pygame.sprite.Sprite):
         #print(self.score)
         if self.body[0][0] + 50 == food.rect.center[
                 0] and self.body[0][1] + 50 == food.rect.center[1]:
-            food.eaten()
+            food.eaten(self)
             self.score += 1
             self.body.append(self.body[-1])
 
@@ -191,10 +191,18 @@ class Food(pygame.sprite.Sprite):
         self.rect = pygame.Rect(0, 0, 50, 50)
         self.rect.center = (225, 125)
 
-    def eaten(self):
-        randx = random.randrange(25, SCREEN_WIDTH - 25, 50)
-        randy = random.randrange(25, SCREEN_HEIGHT - 25, 50)
-        self.rect.center = (randx, randy)
+    def eaten(self, snake):
+        while self.testCollision(snake):
+            randx = random.randrange(25, SCREEN_WIDTH - 25, 50)
+            randy = random.randrange(25, SCREEN_HEIGHT - 25, 50)
+            self.rect.center = (randx, randy)
+
+    def testCollision(self, snake):
+        for i in range(len(snake.body)):
+            if self.rect.colliderect(
+                    pygame.Rect(snake.body[i][0], snake.body[i][1], 50, 50)):
+                return True
+        return False
 
     def draw(self, surface):
         pygame.draw.rect(surface, RED, self.rect, 0, 12)
