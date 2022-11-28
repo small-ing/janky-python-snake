@@ -100,9 +100,15 @@ class Snake(pygame.sprite.Sprite):
                         pygame.image.load("snake_art/Snake3.png"), 90)
                     surface.blit(tempImage, tempRect)
             else:
-                adjacent.append(self.body[i - 1])
-                adjacent.append(self.body[i])
-                adjacent.append(self.body[i + 1])
+                if not adjacent:
+                    adjacent.append(self.body[i - 1])
+                    adjacent.append(self.body[i])
+                    adjacent.append(self.body[i + 1])
+                else:
+                    adjacent[0] = self.body[i - 1]
+                    adjacent[1] = self.body[i]
+                    adjacent[2] = self.body[i + 1]
+
                 if adjacent[0][1] == adjacent[1][1] and adjacent[2][
                         1] == adjacent[1][1]:  # vertially adjacent
                     tempImage = pygame.transform.rotate(
